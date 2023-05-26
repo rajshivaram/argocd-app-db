@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: hook
 metadata:
-  name: install-database
+  name: springdemo-postgres
   annotations:
     argocd.argoproj.io/hook: PreSync
 spec:
@@ -9,13 +9,13 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Application
     metadata:
-      name: install-database
+      name: springdemo-postgres
       namespace: default
     spec:
       project: default
       source:
-        repoURL: <github_repo_url>
-        path: argocd/claim.yaml
+        repoURL: https://github.com/rajshivaram/argocd-app-db.git
+        path: dev/postgres-claim.yaml
         targetRevision: HEAD
       destination:
         server: https://kubernetes.default.svc

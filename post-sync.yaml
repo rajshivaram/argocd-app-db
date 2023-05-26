@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: hook
 metadata:
-  name: install-application
+  name: springdemoapp
   annotations:
     argocd.argoproj.io/hook: PostSync
 spec:
@@ -9,13 +9,13 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Application
     metadata:
-      name: install-application
+      name: springdemoapp
       namespace: default
     spec:
       project: default
       source:
-        repoURL: <github_repo_url>
-        path: argocd/deploy.yaml
+        repoURL: https://github.com/rajshivaram/argocd-app-db.git
+        path: dev/deployment.yaml
         targetRevision: HEAD
       destination:
         server: https://kubernetes.default.svc
@@ -24,7 +24,7 @@ spec:
 apiVersion: argoproj.io/v1alpha1
 kind: hook
 metadata:
-  name: install-service
+  name: springdemoapp-service
   annotations:
     argocd.argoproj.io/hook: PostSync
 spec:
@@ -37,14 +37,9 @@ spec:
     spec:
       project: default
       source:
-        repoURL: <github_repo_url>
-        path: argocd/service.yaml
+        repoURL: https://github.com/rajshivaram/argocd-app-db.git
+        path: dev/service.yaml
         targetRevision: HEAD
-        helm:
-          values: []
-          chart: <chart_name>
-          releaseName: <release_name>
-          version: <chart_version>
       destination:
         server: https://kubernetes.default.svc
         namespace: default
