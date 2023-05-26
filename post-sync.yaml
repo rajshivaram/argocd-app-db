@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: hook
+metadata:
+  name: install-application
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+spec:
+  manifest: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: install-application
+      namespace: default
+    spec:
+      project: default
+      source:
+        repoURL: <github_repo_url>
+        path: argocd/deploy.yaml
+        targetRevision: HEAD
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default
+---
+apiVersion: argoproj.io/v1alpha1
+kind: hook
+metadata:
+  name: install-service
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+spec:
+  manifest: |
+    apiVersion: argoproj.io/v1alpha1
+    kind: Application
+    metadata:
+      name: install-service
+      namespace: default
+    spec:
+      project: default
+      source:
+        repoURL: <github_repo_url>
+        path: argocd/service.yaml
+        targetRevision: HEAD
+        helm:
+          values: []
+          chart: <chart_name>
+          releaseName: <release_name>
+          version: <chart_version>
+      destination:
+        server: https://kubernetes.default.svc
+        namespace: default

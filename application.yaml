@@ -1,0 +1,26 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: springdemoapp
+  namespace: default
+  annotations:
+    argocd.argoproj.io/hook-annotations: |
+      "argocd.argoproj.io/hook": PreSync
+      "argocd.argoproj.io/hook": PostSync
+      "argocd.argoproj.io/hook-weight": "99"
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/rajshivaram/argocd-app-config.git
+    targetRevision: HEAD
+    path: dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    syncOptions:
+      - CreateNameSpace=true
+    automated:
+      selfHeal: true
+      prune: true
